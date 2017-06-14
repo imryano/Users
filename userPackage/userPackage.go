@@ -2,7 +2,12 @@ package userPackage
 
 import (
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 )
+
+const DbUrl string = "127.0.0.1"
+const DbName string = "userDB"
+const UserCol string = "users"
 
 //Enum
 type AccessLevel int
@@ -17,7 +22,7 @@ const (
 
 //Aggregate
 type User struct {
-	ID              int
+	ID              bson.ObjectId `bson:"_id,omitempty"`
 	Username        string
 	Password        string
 	Email           string
@@ -74,7 +79,6 @@ func (self *User) PromoteUser() {
 func (state *User) Transition(event interface{}) {
 	switch e := event.(type) {
 	case CreateUser:
-		state.ID = 1
 		state.Username = e.Username
 		state.Password = e.Password
 		state.Email = e.Email
